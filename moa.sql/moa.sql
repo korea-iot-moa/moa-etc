@@ -92,3 +92,10 @@ CREATE TABLE Black_List (
     FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id)
 );
 
+CREATE TABLE Notice (
+	notice_id INT AUTO_INCREMENT PRIMARY KEY,
+    notice_title VARCHAR(255),
+    notice_content VARCHAR(255),
+    notice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
