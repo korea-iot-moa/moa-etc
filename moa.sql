@@ -1,7 +1,7 @@
-CREATE DATABASE moa_db;
+ CREATE DATABASE moa_db;
 USE moa_db;
 
-# 유저 - 선택 - 취미, 이미지, 지역
+# 유저 - 선택 - 취미, 이미지, 지역 //!!! 비밀번호 질문 삭제
 CREATE TABLE Users (
 	user_id VARCHAR(255) PRIMARY KEY NOT NULL,
     user_password VARCHAR(255) NOT NULL,
@@ -9,8 +9,6 @@ CREATE TABLE Users (
     user_gender ENUM('male', 'female') NOT NULL,
     user_name VARCHAR(255) NOT NULL,
     user_nickname VARCHAR(255) NOT NULL UNIQUE,
-    security_question ENUM("1","2","3","4","5") NOT NULL,
-    security_answer VARCHAR(255) NOT NULL,
     hobby ENUM('취미', '문화&예술', '스포츠&운동', '푸드&맛집', '자기계발', '여행', '연애', '힐링'), 
     profile_image BLOB, 
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
