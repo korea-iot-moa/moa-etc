@@ -36,7 +36,7 @@ CREATE TABLE Recommendations (
     user_id VARCHAR(255),
     PRIMARY KEY(group_id, user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id) ON DELETE CASCADE
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
 );
 
 # 유저리스트에 답변 저장
@@ -48,7 +48,7 @@ CREATE TABLE User_Answers (
     user_answer TEXT NOT NULL,  -- 사용자가 제출한 답변
     answer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  -- 답변 제출 날짜
     is_approved BOOLEAN DEFAULT FALSE NOT NULL,  -- 관리자가 승인을 했는지 여부
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id) ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE User_List (
     join_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (group_id, user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id) ON DELETE CASCADE
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
 );
 
 
@@ -71,11 +71,11 @@ CREATE TABLE Reviews (
 	review_id INT AUTO_INCREMENT PRIMARY KEY,
 	group_id INT NOT NULL, 
     user_id VARCHAR(255) NOT NULL,
-    review_content TEXT(255) NOT NULL,
+    review_content TEXT NOT NULL,
     review_image BLOB,
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id) ON DELETE CASCADE
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
 );
 
 # 투표  개설
@@ -83,11 +83,11 @@ CREATE TABLE Votes (
 	vote_id INT AUTO_INCREMENT PRIMARY KEY,
     group_id INT NOT NULL, 
     creator_id VARCHAR(255) NOT NULL, # 생성자
-    vote_content TEXT(255) NOT NULL,
+    vote_content TEXT NOT NULL,
     vote_create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     vote_close_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id) ON DELETE CASCADE
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
 );
 
 # 투표 참여
@@ -107,13 +107,13 @@ CREATE TABLE Reports (
     user_id VARCHAR(255) NOT NULL,
     group_id INT NOT NULL,
     report_type ENUM('욕설', '사기', '성추행', '폭행', '기타') NOT NULL,
-    report_detail TEXT(255) NOT NULL,
+    report_detail TEXT NOT NULL,
     report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     report_user VARCHAR(255) NOT NULL,
     report_image BLOB,
     report_result ENUM("처리중", "추방", "유지") DEFAULT "처리중" NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id),
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id),
     FOREIGN KEY (report_user) REFERENCES Users(user_id) # 가해자 정보
     
 );
@@ -124,7 +124,7 @@ CREATE TABLE Black_List (
 	user_id VARCHAR(255) NOT NULL,
     group_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (group_id) REFERENCES Meeting_Group(group_id)
+    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id)
 );
 
 CREATE TABLE Notices (
