@@ -1,7 +1,9 @@
  CREATE DATABASE moa_db;
 USE moa_db;
 
-# 유저 - 선택 - 취미, 이미지, 지역 //!!! 비밀번호 질문 삭제
+# 유저
+# 필수 : 유저 아이디(기본키), 비밀번호, 생년월일, 성별, 이름, 닉네임   
+# 선택 : 취미, 이미지, 지역 //!!! 비밀번호 질문 삭제
 CREATE TABLE Users (
 	user_id VARCHAR(255) PRIMARY KEY NOT NULL,
     user_password VARCHAR(255) NOT NULL,
@@ -14,7 +16,10 @@ CREATE TABLE Users (
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
 );
 
-# 그룹 - 선택 - 준미물, 이미지
+# 그룹
+# 필수 : 그룹 아이디(기본키), 생성자(모임장), 모임 제목,모임 내용, 그룹 타입(group_type), 모임 타입(meeting_type), 모임 주소
+# 선택 : 준미물, 이미지
+# 참조 : 유저- 유저 아이디-생성자 
 CREATE TABLE Meeting_Groups (
 	group_id INT AUTO_INCREMENT PRIMARY KEY,
     creator_id VARCHAR(255) NOT NULL,
@@ -30,7 +35,8 @@ CREATE TABLE Meeting_Groups (
     FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
-# 추천
+# 추천 
+# 참조 : (유저 - 유저 아이디 , 그룹 - 그룹 아이디): 기본키   
 CREATE TABLE Recommendations (
 	group_id INT,
     user_id VARCHAR(255),
@@ -41,6 +47,8 @@ CREATE TABLE Recommendations (
 
 # 유저리스트에 답변 저장
 # 질문 & 답변 테이블 만들지
+# 필수 : 답변 아이디(기본키), 그룹 아이디, 유저 아이디, 유저 답변, 답변 제출한 날짜, 승인 여부    
+# 참조 : 그룹(Meeting_Groups) - 그룹 아이디, 유저(Users) - 유저 아이디 
 CREATE TABLE User_Answers (
     answer_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     group_id INT NOT NULL,  -- 어느 모임에 대한 답변인지
@@ -54,6 +62,8 @@ CREATE TABLE User_Answers (
 
 
 # 그룹 내 유저리스트
+# 필수 : 유저 레벨, 참여 날짜
+# 참조 :기본키(그룹(Meeting_Groups) - 그룹 아이디, 유저(Users) - 유저 아이디 )
 CREATE TABLE User_List (
 	group_id INT, 
     user_id VARCHAR(255),
@@ -66,7 +76,10 @@ CREATE TABLE User_List (
 
 
 
-# 후기 - 선택 -  이미지
+# 후기 
+# 필수 : 리뷰 아이디(기본키) 그룹 아이디, 유저 아이디, 리뷰 내용, 리뷰 날짜 
+# 선택 : 이미지
+# 참조 : 그룹(Meeting_Groups) - 그룹 아이디, 유저(Users) - 유저 아이디 
 CREATE TABLE Reviews (
 	review_id INT AUTO_INCREMENT PRIMARY KEY,
 	group_id INT NOT NULL, 
@@ -78,40 +91,49 @@ CREATE TABLE Reviews (
     FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
 );
 
-# 투표  개설
+# 투표 개설
+# 필수값: 투표아이디, 그룹아이디, 생성자아이디, 투표내용, 투표생성날짜, 투표종료날짜
+# 선택값: X
+# 참조값: 유저(Users)-유저 아이디, 그룹(Meeting_Groups)-그룹아이디
 CREATE TABLE Votes (
-	vote_id INT AUTO_INCREMENT PRIMARY KEY,
-    group_id INT NOT NULL, 
-    creator_id VARCHAR(255) NOT NULL, # 생성자
-    vote_content TEXT NOT NULL,
-    vote_create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    vote_close_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	vote_id INT AUTO_INCREMENT PRIMARY KEY, -- 투표아이디
+    group_id INT NOT NULL, -- 그룹아이디
+    creator_id VARCHAR(255) NOT NULL, -- 생성자아이디
+    vote_content TEXT NOT NULL, -- 투표내용
+    vote_create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- 투표생성날짜
+    vote_close_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- 투표종료날짜
     FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
 );
 
 # 투표 참여
+# 필수값: 투표결과아이디, 투표아이디, 유저아이디, 투표답변, 투표한날짜
+# 선택값: X
+# 참조값: 투표아이디(Votes) - 투표아이디, 유저(Users) - 유저아이디
 CREATE TABLE Vote_Results (
-	vote_result_id INT AUTO_INCREMENT PRIMARY KEY,
-    vote_id INT NOT NULL,
-    user_id VARCHAR(255) NOT NULL,
-    vote_answer ENUM("O", "X") NOT NULL,
-    vote_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	vote_result_id INT AUTO_INCREMENT PRIMARY KEY, -- 투표결과아이디
+    vote_id INT NOT NULL, -- 투표아이디
+    user_id VARCHAR(255) NOT NULL, -- 사용자아이디
+    vote_answer ENUM("O", "X") NOT NULL, -- 투표답변
+    vote_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- 투표한날짜
     FOREIGN KEY (vote_id) REFERENCES Votes(vote_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 # 신고
+# 필수값: 신고아이디, 유저 아이디, 그룹아이디, 신고유형, 신고내용, 신고자, 신고결과
+# 선택값: 신고이미지
+# 참조값: 유저(Users)-유저 아이디, 그룹(Meeting_Groups)-그룸아이디, 유저 유저(Users)-신고아이디
 CREATE TABLE Reports (
-	report_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id VARCHAR(255) NOT NULL,
-    group_id INT NOT NULL,
-    report_type ENUM('욕설', '사기', '성추행', '폭행', '기타') NOT NULL,
-    report_detail TEXT NOT NULL,
-    report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    report_user VARCHAR(255) NOT NULL,
-    report_image BLOB,
-    report_result ENUM("처리중", "추방", "유지") DEFAULT "처리중" NOT NULL,
+	report_id INT AUTO_INCREMENT PRIMARY KEY, -- 신고아이디
+    user_id VARCHAR(255) NOT NULL, -- 사용자 아이디
+    group_id INT NOT NULL, -- 그룹아이디
+    report_type ENUM('욕설', '사기', '성추행', '폭행', '기타') NOT NULL, -- 신고유형
+    report_detail TEXT NOT NULL, -- 신고유형
+    report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- 신고내용
+    report_user VARCHAR(255) NOT NULL, -- 신고자
+    report_image BLOB, -- 신고이미지
+    report_result ENUM("처리중", "추방", "유지") DEFAULT "처리중" NOT NULL, -- 신고결과
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id),
     FOREIGN KEY (report_user) REFERENCES Users(user_id) # 가해자 정보
@@ -119,18 +141,26 @@ CREATE TABLE Reports (
 );
 
 # 블랙리스트
+# 기본키: 블랙리스트아이디
+# 필수값: 유저 아이디, 그룸아이디  
+# 선택값: X
+# 참조값: 유저(Users)-유저 아이디, 그룹(Meeting_Groups)-그룸아이디
 CREATE TABLE Black_List (
-	black_list_id INT AUTO_INCREMENT PRIMARY KEY,
-	user_id VARCHAR(255) NOT NULL,
-    group_id INT NOT NULL,
+	black_list_id INT AUTO_INCREMENT PRIMARY KEY, -- 블랙리스트아이디
+	user_id VARCHAR(255) NOT NULL, -- 사용자아이디
+    group_id INT NOT NULL, -- 그룸아이디
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id)
 );
 
+# 공지사항: 사이트 관련 공지사항, 자주하는 질문
+# 기본키: 공지사항아이디
+# 필수값: 공지사항제목, 공지사항 내용, 공지사항업로드날짜
+# 선택값: X
 CREATE TABLE Notices (
-	notice_id INT AUTO_INCREMENT PRIMARY KEY,
-    notice_title VARCHAR(255) NOT NULL,
-    notice_content TEXT NOT NULL,
-    notice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+	notice_id INT AUTO_INCREMENT PRIMARY KEY,-- 공지사항아이디
+    notice_title VARCHAR(255) NOT NULL,-- 공지사항제목
+    notice_content TEXT NOT NULL, -- 공지사항 내용
+    notice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- 공지사항업로드날짜
 );
 
