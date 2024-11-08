@@ -12,7 +12,7 @@ CREATE TABLE Users (
     user_name VARCHAR(255) NOT NULL,
     user_nickname VARCHAR(255) NOT NULL UNIQUE,
     hobby ENUM('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
-    profile_image BLOB, 
+    profile_image VARCHAR(255), 
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE Meeting_Groups (
     meeting_type ENUM('온라인', '오프라인') NOT NULL,
     group_category ENUM('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
     group_address VARCHAR(255) NOT NULL,
-    group_image BLOB,
+    group_image VARCHAR(255),
     group_supplies VARCHAR(255),
     group_date DATE NOT NULL,
     group_question VARCHAR(255) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE User_Answers (
     user_answer TEXT NOT NULL,  -- 사용자가 제출한 답변
     answer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  -- 답변 제출 날짜
     is_approved BOOLEAN DEFAULT FALSE NOT NULL,  -- 관리자가 승인을 했는지 여부
-
+	FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE Reviews (
 	group_id INT NOT NULL, 
     user_id VARCHAR(255) NOT NULL,
     review_content TEXT NOT NULL,
-    review_image BLOB,
+    review_image VARCHAR(255),
     review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE
@@ -135,7 +135,7 @@ CREATE TABLE Reports (
     report_detail TEXT NOT NULL, -- 신고유형
     report_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, -- 신고내용
     report_user VARCHAR(255) NOT NULL, -- 신고자
-    report_image BLOB, -- 신고이미지
+    report_image VARCHAR(255), -- 신고이미지
     report_result ENUM("처리중", "추방", "유지") DEFAULT "처리중" NOT NULL, -- 신고결과
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id),
