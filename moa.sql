@@ -11,7 +11,7 @@ CREATE TABLE Users (
     user_gender ENUM('male', 'female') NOT NULL,
     user_name VARCHAR(255) NOT NULL,
     user_nickname VARCHAR(255) NOT NULL UNIQUE,
-    hobby ENUM('취미', '문화&예술', '스포츠&운동', '푸드&맛집', '자기계발', '여행', '연애', '힐링'), 
+    hobby ENUM('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
     profile_image BLOB, 
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
 );
@@ -27,6 +27,7 @@ CREATE TABLE Meeting_Groups (
     group_content TEXT NOT NULL,
     group_type ENUM('단기모임', '정기모임') NOT NULL,
     meeting_type ENUM('온라인', '오프라인') NOT NULL,
+    group_category ENUM('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
     group_address VARCHAR(255) NOT NULL,
     group_image BLOB,
     group_supplies VARCHAR(255),
@@ -34,6 +35,8 @@ CREATE TABLE Meeting_Groups (
     group_question VARCHAR(255) NOT NULL,
     FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
+
+
 
 # 추천 
 # 참조 : (유저 - 유저 아이디 , 그룹 - 그룹 아이디): 기본키   
@@ -56,7 +59,7 @@ CREATE TABLE User_Answers (
     user_answer TEXT NOT NULL,  -- 사용자가 제출한 답변
     answer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  -- 답변 제출 날짜
     is_approved BOOLEAN DEFAULT FALSE NOT NULL,  -- 관리자가 승인을 했는지 여부
-    FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE,
+
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
@@ -67,7 +70,7 @@ CREATE TABLE User_Answers (
 CREATE TABLE User_List (
 	group_id INT, 
     user_id VARCHAR(255),
-    user_level ENUM("관리자", "우수회원", "일반 회원") NOT NULL,
+    user_level ENUM("관리자", "우수회원", "일반회원") NOT NULL,
     join_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (group_id, user_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
