@@ -3,6 +3,12 @@ SELECT *
 FROM Users u 
 WHERE u.user_id = 'USER_ID';
 
+# 비밀번호 변경
+UPDATE User u
+SET u.user_password = "PASSWORD"
+WHERE u.user_id = "USER_ID";
+
+
 # 모임 내 유저 조회 - 아이디, 닉네임
 SELECT u.user_id, u.user_nickname
 FROM Users u
@@ -18,8 +24,11 @@ WHERE ul.user_id = 'USER_ID';
 # 모임 나가기 유저 id , 그룹 id 가 user_list 테이블에 일치할 시
 DELETE 
 FROM user_list 
-WHERE user_id = "userId" 
-AND group_id = "groupId";
+WHERE user_id = "userId" AND group_id = "groupId";
+
+# 후기 작성
+INSERT INTO Reviews (group_id, user_id, review_content, review_image)
+VALUES ("GROUP_ID", "USER_ID", "REVIEW_CONTENT", "REVIEW_IMAGE");
 
 # 후기 전체 조회
 SELECT *
@@ -34,6 +43,18 @@ WHERE review_id = "REIVEW_ID";
 SELECT r.*
 FROM reviews r
 WHERE r.user_id = "USER_ID";
+
+# 후기 수정
+UPDATE Reviews r
+SET 
+	r.review_content = "UPDATE_CONTENT",
+    r.review_content = "NEW_DATE"
+WHERE r.user_id = "USER_ID";
+
+# 신고 등록
+INSERT INTO Reposrts (user_id, group_id, report_type, report_detail, report_date, report_user, report_image)
+VALUES ("USER_ID", "GROUP_ID", "REPORT_TYPE", "REPORT_DETAIL", "REPORT_DATE", "REPORT_USER", "REPORT_IMAGE");
+
 
 # 투표 조회
 SELECT v.*
