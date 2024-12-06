@@ -10,15 +10,13 @@ WHERE u.user_id = "USER_ID";
 
 
 # 모임 내 유저 조회 - 아이디, 닉네임
-SELECT u.user_id, u.user_nickname
-FROM Users u
-JOIN user_list ul ON u.user_id = ul.user_id
+SELECT u.user_id, u.user_nickname, u.profile_image
+FROM Users u JOIN user_list ul ON u.user_id = ul.user_id
 WHERE ul.group_id = 'GROUP_ID';
 
 # 내 모임 조회 (사이드바) - 그룹id, 모임 이미지, 제목
 SELECT g.group_id, g.group_image, g.group_title
-FROM meeting_groups g
-JOIN user_list ul ON g.group_id = ul.group_id
+FROM meeting_groups g JOIN user_list ul ON g.group_id = ul.group_id
 WHERE ul.user_id = 'USER_ID';
 
 # 모임 나가기 유저 id , 그룹 id 가 user_list 테이블에 일치할 시
