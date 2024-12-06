@@ -8,7 +8,7 @@ CREATE TABLE Users (
 	user_id VARCHAR(255) PRIMARY KEY NOT NULL,
     user_password VARCHAR(255) NOT NULL,
     user_birth_date DATE NOT NULL,
-    user_gender ENUM('male', 'female') NOT NULL,
+    user_gender ENUM('MALE', 'FEMALE') NOT NULL,
     user_name VARCHAR(255) NOT NULL,
     user_nickname VARCHAR(255) NOT NULL UNIQUE,
     hobby ENUM('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
