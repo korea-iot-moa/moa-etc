@@ -1,7 +1,7 @@
 # 검색
 SELECT group_id, group_title, group_address, group_category, group_address, group_image, group_date
 FROM Meeting_Groups
-WHERE group_title LIKE '%keyword%'
+WHERE group_title LIKE '% keyword %'
 ORDER BY group_id; 
 
 #카테고리 필터링
@@ -21,20 +21,47 @@ SELECT group_id, group_title, group_address, group_category, group_image, group_
 FROM (
     SELECT mg.group_id, u.user_id, mg.group_title, mg.group_address, mg.group_category, 
            mg.group_image, mg.group_date,
-           ROW_NUMBER() OVER (PARTITION BY mg.group_category ORDER BY group_category) AS rn
+           ROW_NUMBER() OVER (PARTITION BY mg.group_category ORDER BY group_title) AS rn
     FROM Meeting_Groups mg
     LEFT JOIN Users u ON mg.group_category = u.hobby
-    WHERE u.user_id = 'userId'
+    WHERE u.user_id = 'user654'
       AND mg.group_category IN ('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링')
 ) AS ranked
 WHERE ranked.rn <= 3
 ORDER BY group_category, RAND();
 
+SELECT ranked.*
+FROM (
+SELECT m.*, ROW_NUMBER() OVER (PARTITION BY mg.group_category ORDER BY mg.group_title) AS run
+FROM meeting_groups mg
+WHERE (
+SELECT * 
+FROM User u
+WHERE u.user_id = "dkssudgktpdy14"
+AND u.hobby = ""
+) AS ranked
+WHERE ranked.rn <= 3
+ORDER BY ranked.group_category, rand();
+
+SELECT ranked.*
+FROM (
+SELECT *, ROW_NUMBER() OVER (PARTITION BY group_category ORDER BY group_title) AS run
+FROM meeting_groups 
+WHERE (
+SELECT * 
+FROM User 
+WHERE user_id = 
+AND hobby = ""
+) AS ranked
+WHERE ranked.rn <= 3
+ORDER BY ranked.group_category, rand();
+
+
 
 #2-2. 단기/정기 모임 필터링
 SELECT DISTINCT group_id, group_type, group_title, group_address, group_image, group_date
 FROM Meeting_Groups 
-WHERE  group_type IN ('단기모임', '정기모임')
+WHERE  group_type = :groupType 
 ORDER BY group_id;
 
 
@@ -59,7 +86,7 @@ profile_image = 'profileImage', region = 'region';
 
 #4-3. 내정보관리 삭제(탈퇴)
 DELETE FROM Users 
-WHERE user_id = 'userId' AND user_password = 'userPassword';
+WHERE user_id = 'user123' AND user_password = 'password123!';
  
 #5. 모임 참여 신청 페이지*****
 INSERT INTO  User_Answers (group_id, user_id, user_answer)
@@ -69,5 +96,8 @@ VALUE ('group_id', 'user_id', 'user_answer');
 SELECT DISTINCT user_id FROM Users
 WHERE user_name ='userName' AND user_birth_date = 'userBirthdate';
 
+SELECT * from meeting_groups;
 
+SELECT * from Users;
 
+Drop DATABASE moa_db;

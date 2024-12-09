@@ -1,5 +1,6 @@
- CREATE DATABASE moa_db;
+CREATE DATABASE moa_db;
 USE moa_db;
+-- DROP DATABASE moa_db;
 
 # 유저
 # 필수 : 유저 아이디(기본키), 비밀번호, 생년월일, 성별, 이름, 닉네임   
@@ -8,13 +9,16 @@ CREATE TABLE Users (
 	user_id VARCHAR(255) PRIMARY KEY NOT NULL,
     user_password VARCHAR(255) NOT NULL,
     user_birth_date DATE NOT NULL,
-    user_gender ENUM('male', 'female') NOT NULL,
+    user_gender ENUM('MALE', 'FEMALE') NOT NULL,
     user_name VARCHAR(255) NOT NULL,
-    user_nickname VARCHAR(255) NOT NULL UNIQUE,
-    hobby ENUM('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
+    user_nickname VARCHAR(255) NOT NULL,
+    hobby SET('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
     profile_image VARCHAR(255), 
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
 );
+
+SELECT * from Users;
+
 
 # 그룹
 # 필수 : 그룹 아이디(기본키), 생성자(모임장), 모임 제목,모임 내용, 그룹 타입(group_type), 모임 타입(meeting_type), 모임 주소
@@ -166,4 +170,6 @@ CREATE TABLE Notices (
     notice_content TEXT NOT NULL, -- 공지사항 내용
     notice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- 공지사항업로드날짜
 );
+
+
 
