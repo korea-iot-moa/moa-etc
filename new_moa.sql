@@ -114,7 +114,8 @@ CREATE TABLE User_List (
 # 참조 : 그룹(Meeting_Groups) - 그룹 아이디, 유저(Users) - 유저 아이디 
 CREATE TABLE Reviews (
 	review_id INT AUTO_INCREMENT PRIMARY KEY,
-	group_id INT NOT NULL, 
+	group_id INT NOT NULL,
+    group_name VARCHAR(255) NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     review_content TEXT NOT NULL,
     review_image VARCHAR(255),
