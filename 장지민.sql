@@ -11,6 +11,11 @@ WHERE group_category IN ('취미', '문화_예술', '스포츠_운동', '푸드_
 	AND group_address IN ('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
 ORDER BY group_id; 
 
+-- "SELECT reco.meetingGroup.groupId, COUNT(reco.user.userId) " +
+--             "FROM MeetingGroup m JOIN Recommendation reco ON m.groupId = reco.meetingGroup.groupId " +
+--             "GROUP BY m.groupId " +
+--             "ORDER BY COUNT(reco.user.userId) DESC"
+
 /*
 2. 홈화면 필터링 - 회원가입하면서 체크한 카테고리 항목에 맞춰서 홈화면에 모임을 추천해준다.
 출력된 카테고리 3개가 화면에 (모임이름, 모이주소, 모임사진, 모임날짜)데이터를 가지고온다. 이 3개의 카테고리에는 각각 3개의 모임이 랜덤으로 출력된다.
@@ -67,10 +72,11 @@ ORDER BY group_id;
 
 #3. 추천 버튼을 클릭하면 그 모임에 클릭한 유저의 수 만큼 카운트(추천순으로 모임을 나열할 때 쓰인다.)
 #3-1.추천 / 추천순
-SELECT DISTINCT mg.group_id, count(reco.user_id) As Recommendation_count
-FROM Meeting_Groups mg 
+SELECT DISTINCT mg.*, count(reco.user_id) As Recommendation_count
+FROM meeting_groups mg
 LEFT JOIN Recommendations reco ON mg.group_id = reco.group_id
 LEFT JOIN Users u ON reco.user_id = u.user_id
+GROUP BY mg.group_id
 ORDER BY Recommendation_count DESC;
 
 

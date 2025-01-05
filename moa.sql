@@ -1,6 +1,7 @@
-CREATE DATABASE moa_db;
+ CREATE DATABASE moa_db;
 USE moa_db;
--- DROP DATABASE moa_db;
+
+SELECT * FROM Recommendations;
 
 # 유저
 # 필수 : 유저 아이디(기본키), 비밀번호, 생년월일, 성별, 이름, 닉네임   
@@ -11,13 +12,39 @@ CREATE TABLE Users (
     user_birth_date DATE NOT NULL,
     user_gender ENUM('MALE', 'FEMALE') NOT NULL,
     user_name VARCHAR(255) NOT NULL,
-    user_nickname VARCHAR(255) NOT NULL,
-    hobby SET('취미', '문화_예술', '스포츠_운동', '푸드_맛집', '자기계발', '여행', '연애', '힐링'), 
+    user_nickname VARCHAR(255) NOT NULL UNIQUE,
     profile_image VARCHAR(255), 
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
 );
 
-SELECT * from Users;
+# 유저 취미 테이블
+# 취미 id 
+# 취미 유형: 취미, 문화_예술, 스포츠_운동, 푸드_맛집, 자기계발, 여행, 연애, 힐링
+CREATE TABLE Hobby (
+	hobby_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	hobby_name VARCHAR(255) NOT NULL
+);   
+
+# 취미 기본 값 주입 
+INSERT INTO Hobby 
+VALUES
+	(DEFAULT, "취미"),
+	(DEFAULT, "문화_예술"),
+	(DEFAULT, "스포츠_운동"),
+	(DEFAULT, "푸드_맛집"),
+	(DEFAULT, "자기계발"),
+	(DEFAULT, "여행"),
+	(DEFAULT, "연애"),
+	(DEFAULT, "힐링");
+
+# 유저 취미 정규화 테이블 
+CREATE TABLE User_Hobbies (
+	user_hobbies_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	hobby_id INT NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    FOREIGN KEY (hobby_id) REFERENCES Hobby(hobby_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE # 유저 회원 탈퇴시 컬럼 삭제 
+);
 
 
 # 그룹
@@ -62,7 +89,7 @@ CREATE TABLE User_Answers (
     user_id VARCHAR(255) NOT NULL,  -- 답변한 사용자
     user_answer TEXT NOT NULL,  -- 사용자가 제출한 답변
     answer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,  -- 답변 제출 날짜
-    is_approved BOOLEAN DEFAULT FALSE NOT NULL,  -- 관리자가 승인을 했는지 여부
+    is_approved INT DEFAULT 2 NOT NULL,  -- 관리자가 승인을 했는지 여부 0: 거절 1: 승인 2: 대기중
 	FOREIGN KEY (group_id) REFERENCES Meeting_Groups(group_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
@@ -146,6 +173,8 @@ CREATE TABLE Reports (
     FOREIGN KEY (report_user) REFERENCES Users(user_id) # 가해자 정보
 );
 
+
+
 # 블랙리스트
 # 기본키: 블랙리스트아이디
 # 필수값: 유저 아이디, 그룸아이디  
@@ -169,6 +198,4 @@ CREATE TABLE Notices (
     notice_content TEXT NOT NULL, -- 공지사항 내용
     notice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- 공지사항업로드날짜
 );
-
-
 
