@@ -38,7 +38,7 @@ VALUES
 # 유저 취미 정규화 테이블 
 CREATE TABLE User_Hobbies (
 	user_hobbies_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	hobby_id INT NOT NULL,
+	hobby_id BIGINT NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     FOREIGN KEY (hobby_id) REFERENCES Hobby(hobby_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE # 유저 회원 탈퇴시 컬럼 삭제 
