@@ -12,7 +12,9 @@ CREATE TABLE Users (
     user_name VARCHAR(255) NOT NULL,
     user_nickname VARCHAR(255) NOT NULL UNIQUE,
     profile_image VARCHAR(255), 
-    region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남')
+    region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남'),
+    user_phone_number VARCHAR(255) NOT NULL,
+	user_mail VARCHAR(255)
 );
 
 # 유저 취미 테이블
@@ -197,4 +199,3 @@ CREATE TABLE Notices (
     notice_content TEXT NOT NULL, -- 공지사항 내용
     notice_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL -- 공지사항업로드날짜
 );
-
