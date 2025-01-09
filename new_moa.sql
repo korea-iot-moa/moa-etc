@@ -38,7 +38,7 @@ VALUES
 # 유저 취미 정규화 테이블 
 CREATE TABLE User_Hobbies (
 	user_hobbies_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	hobby_id INT NOT NULL,
+	hobby_id BIGINT NOT NULL,
     user_id VARCHAR(255) NOT NULL,
     FOREIGN KEY (hobby_id) REFERENCES Hobby(hobby_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE # 유저 회원 탈퇴시 컬럼 삭제 
@@ -99,6 +99,8 @@ CREATE TABLE User_Answers (
 CREATE TABLE User_List (
 	group_id INT, 
     user_id VARCHAR(255),
+    user_nickname VARCHAR(255),
+    profile_image VARCHAR(255), 
     user_level ENUM("관리자", "우수회원", "일반회원") NOT NULL,
     join_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (group_id, user_id),
