@@ -14,7 +14,7 @@ CREATE TABLE Users (
     profile_image VARCHAR(255), 
     region ENUM('부산', '대구', '인천', '광주', '대전', '울산', '서울', '제주', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남'),
     user_phone_number VARCHAR(255) NOT NULL,
-	user_mail VARCHAR(255)
+	user_mail VARCHAR(255) NOT NULL
 );
 
 # 유저 취미 테이블
@@ -101,6 +101,8 @@ CREATE TABLE User_Answers (
 CREATE TABLE User_List (
 	group_id INT, 
     user_id VARCHAR(255),
+    user_nickname VARCHAR(255),
+    profile_image VARCHAR(255), 
     user_level ENUM("관리자", "우수회원", "일반회원") NOT NULL,
     join_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (group_id, user_id),
